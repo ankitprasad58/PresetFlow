@@ -1,0 +1,67 @@
+# docker-compose.yml
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: preset-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: Clownexe@10
+      MYSQL_DATABASE: preset_store
+      MYSQL_USER: preset_user
+      MYSQL_PASSWORD: preset_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-pClownexe@10",
+        ]
+      timeout: 20s
+      retries: 10
+      start_period: 60s
+      interval: 10s
+    networks:
+      - presetflow
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: preset-backend
+    ports:
+      - "4000:4000"
+    environment:
+      DATABASE_URL: mysql://preset_user:preset_password@mysql:3306/preset_store
+      JWT_SECRET: your-super-secret-jwt-key
+      JWT_EXPIRES_IN: 7d
+      STRIPE_SECRET_KEY: sk_test_your_stripe_secret_key
+      STRIPE_WEBHOOK_SECRET: whsec_your_webhook_secret
+      STRIPE_PUBLIC_KEY: pk_test_your_stripe_public_key
+      PORT: 4000
+      FRONTEND_URL: http://localhost:5173
+      NODE_ENV: development
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - ./backend/src:/app/src
+    networks:
+      - presetflow
+    command: sh -c "sleep 30 && npx prisma migrate deploy && npx prisma db seed && npm run dev"
+
+volumes:
+  mysql_data:
+
+networks:
+  presetflow:
+    driver: bridge
