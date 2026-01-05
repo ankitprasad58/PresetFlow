@@ -15,21 +15,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
-const users_service_1 = require("../users/users.service");
 let AuthController = class AuthController {
-    constructor(authService, usersService) {
+    constructor(authService) {
         this.authService = authService;
-        this.usersService = usersService;
     }
     async login(body) {
-        const user = await this.authService.validateUser(body.email, body.password);
-        if (!user) {
-            throw new Error('Invalid credentials');
-        }
-        return this.authService.login(user);
+        return this.authService.login(body.email, body.password);
     }
     async register(body) {
-        return this.usersService.create(body.email, body.password, body.name);
+        return this.authService.register(body.email, body.password, body.name);
     }
 };
 exports.AuthController = AuthController;
@@ -49,7 +43,6 @@ __decorate([
 ], AuthController.prototype, "register", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
-    __metadata("design:paramtypes", [auth_service_1.AuthService,
-        users_service_1.UsersService])
+    __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], AuthController);
 //# sourceMappingURL=auth.controller.js.map

@@ -9,11 +9,26 @@ export declare class AuthService {
         email: string;
         password: string;
         name: string | null;
+        credits: number;
+        lastCreditDeductedAt: Date | null;
         createdAt: Date;
         updatedAt: Date;
     } | null>;
-    login(user: any): Promise<{
+    login(email: string, password: string): Promise<{
         access_token: string;
+        user: {
+            id: string;
+            email: string;
+            name: string | null;
+        };
+    }>;
+    register(email: string, password: string, name: string): Promise<{
+        access_token: string;
+        user: {
+            id: string;
+            email: string;
+            name: string | null;
+        };
     }>;
 }
 //# sourceMappingURL=auth.service.d.ts.map

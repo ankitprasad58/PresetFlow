@@ -1,26 +1,29 @@
 import { AuthService } from './auth.service';
-import { UsersService } from '../users/users.service';
 export declare class AuthController {
-    private authService;
-    private usersService;
-    constructor(authService: AuthService, usersService: UsersService);
+    private readonly authService;
+    constructor(authService: AuthService);
     login(body: {
         email: string;
         password: string;
     }): Promise<{
         access_token: string;
+        user: {
+            id: string;
+            email: string;
+            name: string | null;
+        };
     }>;
     register(body: {
         email: string;
         password: string;
         name: string;
     }): Promise<{
-        id: string;
-        email: string;
-        password: string;
-        name: string | null;
-        createdAt: Date;
-        updatedAt: Date;
+        access_token: string;
+        user: {
+            id: string;
+            email: string;
+            name: string | null;
+        };
     }>;
 }
 //# sourceMappingURL=auth.controller.d.ts.map

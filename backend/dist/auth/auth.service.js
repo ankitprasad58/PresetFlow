@@ -59,9 +59,26 @@ let AuthService = class AuthService {
         }
         return null;
     }
-    async login(user) {
-        const payload = { sub: user.id, email: user.email };
-        return { access_token: this.jwtService.sign(payload) };
+    async login(email, password) {
+        const user = await this.validateUser(email, password);
+        if (!user)
+            throw new common_1.UnauthorizedException('Invalid credentials');
+        const payload = { sub: user.id, email: user.email, name: user.name };
+        return {
+            access_token: this.jwtService.sign(payload),
+            user: { id: user.id, email: user.email, name: user.name },
+        };
+    }
+    async register(email, password, name) {
+        const existing = await this.usersService.findByEmail(email);
+        if (existing)
+            throw new common_1.ConflictException('Email already registered');
+        const user = await this.usersService.create(email, password, name);
+        const payload = { sub: user.id, email: user.email, name: user.name };
+        return {
+            access_token: this.jwtService.sign(payload),
+            user: { id: user.id, email: user.email, name: user.name },
+        };
     }
 };
 exports.AuthService = AuthService;

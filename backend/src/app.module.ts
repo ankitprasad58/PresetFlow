@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 import { OrdersModule } from './orders/orders.module';
+import { AIModule } from './ai/ai.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { OrdersModule } from './orders/orders.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
+    AIModule,
     PaymentsModule,
     AuthModule,
     UsersModule,

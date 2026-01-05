@@ -14,6 +14,7 @@ import Success from "./pages/Success";
 import Auth from "./pages/Auth";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Footer from "./components/Footer";
+import AIContent from "./pages/AIContent";
 import "./styles/global.css";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
@@ -32,6 +33,7 @@ function App() {
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/success" element={<Success />} />
+                <Route path="/ai-content" element={<AIContent />} />
                 <Route
                   path="/dashboard"
                   element={

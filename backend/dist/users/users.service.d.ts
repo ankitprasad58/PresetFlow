@@ -7,6 +7,8 @@ export declare class UsersService {
         email: string;
         password: string;
         name: string | null;
+        credits: number;
+        lastCreditDeductedAt: Date | null;
         createdAt: Date;
         updatedAt: Date;
     } | null>;
@@ -15,6 +17,8 @@ export declare class UsersService {
         email: string;
         password: string;
         name: string | null;
+        credits: number;
+        lastCreditDeductedAt: Date | null;
         createdAt: Date;
         updatedAt: Date;
     }>;

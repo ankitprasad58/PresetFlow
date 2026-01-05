@@ -35,4 +35,17 @@ exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)('users'),
     __metadata("design:paramtypes", [users_service_1.UsersService])
 ], UsersController);
+// src/users/users.controller.ts
+// @Get('me')
+// @UseGuards(JwtAuthGuard)
+// async getProfile(@Request() req) {
+//   const user = await this.usersService.findById(req.user.id);
+//   return {
+//     id: user.id,
+//     email: user.email,
+//     name: user.name,
+//     credits: user.credits,
+//     lastCreditDeductedAt: user.lastCreditDeductedAt,
+//   };
+// }
 //# sourceMappingURL=users.controller.js.map

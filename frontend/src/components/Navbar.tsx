@@ -10,6 +10,7 @@ import {
   Download,
   Sparkles,
   Bell,
+  Brain,
 } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
@@ -50,6 +51,13 @@ const Navbar: React.FC = () => {
               >
                 <Sparkles className="w-4 h-4" />
                 <span>Home</span>
+              </Link>
+              <Link
+                to="/ai-content"
+                className="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105 flex items-center space-x-1"
+              >
+                <Brain className="w-4 h-4" />
+                <span>AI Studio</span>
               </Link>
               <Link
                 to="/products"

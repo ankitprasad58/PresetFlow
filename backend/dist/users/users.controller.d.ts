@@ -11,6 +11,8 @@ export declare class UsersController {
         email: string;
         password: string;
         name: string | null;
+        credits: number;
+        lastCreditDeductedAt: Date | null;
         createdAt: Date;
         updatedAt: Date;
     }>;

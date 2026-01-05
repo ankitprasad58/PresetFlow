@@ -1,5 +1,6 @@
 // frontend/src/context/AuthContext.tsx
 import React, { createContext, useContext, useState, useEffect } from "react";
+import axios from "axios";
 
 interface User {
   id: string;
@@ -10,12 +11,14 @@ interface User {
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, name: string) => Promise<void>; // Remove password
+  register: (email: string, password: string, name: string) => Promise<void>;
   logout: () => void;
   isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -24,36 +27,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for existing session
-    const savedUser = localStorage.getItem("presetflow_user");
-    if (savedUser) {
-      try {
-        const parsedUser = JSON.parse(savedUser);
-        // Validate token/expiry here in production
-        setUser(parsedUser);
-      } catch (error) {
-        localStorage.removeItem("presetflow_user");
-      }
+    const token = localStorage.getItem("access_token");
+    const userStr = localStorage.getItem("user");
+    if (token && userStr) {
+      setUser(JSON.parse(userStr));
     }
     setIsLoading(false);
   }, []);
 
-  const login = async (email: string) => {
+  const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      // In production, this would be an API call
-      const mockUser = {
-        id: "1",
+      const res = await axios.post(`${API_BASE}/auth/login`, {
         email,
-        name: email.split("@")[0],
-      };
-
-      // Simulate API delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      setUser(mockUser);
-      localStorage.setItem("presetflow_user", JSON.stringify(mockUser));
-      localStorage.setItem("presetflow_token", "mock-jwt-token");
+        password,
+      });
+      localStorage.setItem("access_token", res.data.access_token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      setUser(res.data.user);
     } catch (error) {
       throw new Error("Login failed");
     } finally {
@@ -61,21 +52,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const register = async (email: string, name: string) => {
+  const register = async (email: string, password: string, name: string) => {
     setIsLoading(true);
     try {
-      // In production, this would be an API call
-      const mockUser = {
-        id: "1",
+      const res = await axios.post(`${API_BASE}/auth/register`, {
         email,
+        password,
         name,
-      };
-
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      setUser(mockUser);
-      localStorage.setItem("presetflow_user", JSON.stringify(mockUser));
-      localStorage.setItem("presetflow_token", "mock-jwt-token");
+      });
+      localStorage.setItem("access_token", res.data.access_token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      setUser(res.data.user);
     } catch (error) {
       throw new Error("Registration failed");
     } finally {
@@ -85,8 +72,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("presetflow_user");
-    localStorage.removeItem("presetflow_token");
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("user");
     localStorage.removeItem("preset-cart");
   };
 

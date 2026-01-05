@@ -37,8 +37,8 @@ const Auth: React.FC = () => {
         toast.success("Welcome back!");
         navigate("/dashboard");
       } else {
-        await register(formData.email, formData.password);
-        toast.success("Account created successfully!");
+        await register(formData.email, formData.password, formData.name);
+        toast.success("Account created!");
         navigate("/dashboard");
       }
     } catch (error) {
